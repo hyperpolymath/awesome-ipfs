@@ -7,7 +7,7 @@
     "ci:danger": "danger ci"
   },
   "devDependencies": {
-    "danger": "^11.1.2"
+    "danger": "^13.0.10"
   },
   "author": "Protocol Labs, Inc.",
   "license": "MIT",
