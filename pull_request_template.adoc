@@ -1,0 +1,10 @@
+== Pre-submit checklist
+
+* [ ] This PR includes only one addition, removal, or edit.
+* [ ] I have followed the
+https://github.com/ipfs/awesome-ipfs/blob/master/CONTRIBUTING.md[Contribution
+Guidelines].
+* [ ] I reviewed the
+https://github.com/ipfs/community/blob/master/code-of-conduct.md[IPFS
+Community Code of Conduct] to ensure my submission meets the
+requirements.
