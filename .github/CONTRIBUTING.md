@@ -60,4 +60,3 @@ Style tips:
 
 Thank you for your suggestions!
 
-’’’’’
