@@ -4,44 +4,25 @@ name: Pull request workflow
 
 on:
   pull_request_target:
-    types: [ opened, synchronize, reopened ]
-    branches: [ master, main ]
+    types: [opened, synchronize, reopened]
+    branches: [master, main]
 
 permissions:
   contents: read
 
 jobs:
-  run-awesome-bot:
+  link-check:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26  # v3
-      - name: Setup Node.js
-        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610  # v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
+      - name: Check README links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
-          node-version: 13
-      - name: Set up Ruby 3.1.2
-        uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073  # v1
-        with:
-          ruby-version: 3.1.2
-      - name: Install and run awesome_bot
-        # It's okay for awesome_bot to fail (for maintainers only). Danger will post a comment on the PR (for maintainers only) if it fails.
-        run: |
-          gem install awesome_bot
-          # Only fail the pull request if $DANGER_GITHUB_API_TOKEN is empty
-          awesome_bot --allow 429 --allow-redirect --allow-dupe --allow-ssl -w ipfs.io README.md || [ -n $DANGER_GITHUB_API_TOKEN ]
-        env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}
-      - name: Run danger
-        if: always()
-        # see https://github.com/danger/danger/issues/1103
-        # see https://github.com/danger/danger/blob/master/.github/workflows/CI.yml#L38-L41
-        run: |
-          TOKEN='7469b4e94ce21b43e3ab7a'
-          TOKEN+='79960c12a1e067f2ec'
-          SECRET_TOKEN="${DANGER_GITHUB_API_TOKEN:-$GITHUB_TOKEN}"
-          DANGER_GITHUB_API_TOKEN=${SECRET_TOKEN:-$TOKEN} RUNNING_IN_ACTIONS=true npm run ci:danger || echo "Skipping Danger for External Contributor"
-        env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          args: >-
+            README.md
+            --exclude-mail
+            --exclude 'ipfs\\.io'
+            --accept 200,429
+          fail: true
